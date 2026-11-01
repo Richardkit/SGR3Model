@@ -1,132 +1,150 @@
-# 当前论文脚本整理版：排除同场景 rescan，全局参考帧 Top-K
+# SGR³: Scene Graph Retrieval and Reasoning
 
-这是 2026-11-01 按论文截图整理的独立代码包。原始脚本、历史结果、正在运行的实验和论文文件均未改动。这里的“旧版”指 **跨场景累计参考帧分数的检索算法，不是先选择一个场景的 argmax 版本**。生成与匹配使用当前本地 Qwen3-VL-32B-Instruct / vLLM 实现；没有恢复未经确认的历史提示词。
+This directory contains the SGR³ pipeline for scene graph generation from RGB sequences. It uses ColQwen filtering, retrieval with SigLIP2 patches, and local Qwen3-VL-32B-Instruct inference through vLLM. Reference scans from the same physical scenes as the evaluation scans are excluded using the official 3RScan reference/rescan groups.
 
-## 1. 固定行为
+## Configuration
 
-| 环节 | 本包设置 |
+The default settings are defined in `configs/paper.json`.
+
+| Stage | Setting |
 |---|---|
-| 测试集 | 固定 47 scans，1,503 GT 物体，10,125 条正 GT 关系 |
-| 场景隔离 | 根据官方 `3RScan.json` 的 reference/rescan 分组，排除全部测试场景家族；不按 UUID 前缀判断 |
-| 窗口 | 6 张图，步长 4；前两个窗口不筛选 |
-| ColQwen | ColQwen2.5，阈值 0.5；筛选图用于检索 |
-| 查询 patch | SigLIP2；每个 patch 检索 **k=10** 个邻居 |
-| 加权 | patch 唯一性权重，温度 **0.5** |
-| 参考选择 | 跨查询图累加每个参考帧的得分，跨场景全局取最多 **5 个参考帧**；没有场景 argmax |
-| Qwen 图像 | 有保留图时输入该窗口全部原图；全窗口被筛除时跳过检索和生成 |
-| Qwen | 本地 Qwen3-VL-32B-Instruct，temperature=0，非推理模式；同一进程中生成、匹配及不同 scan 共用一个模型实例 |
-| 输出处理 | 保留现有软解析、词表外名称、可见物体对补边、跨窗口合并和候选排序；在最终评估入口统一截断三个谓词 |
-| 评估 | 类别同义词 v2，两个端点类别均正确，关系集合 set@3；谓词语义裁判关闭 |
+| Evaluation split | 47 scans, 1,503 ground truth objects, 10,125 positive relationship annotations |
+| Scene exclusion | Exclude every reference/rescan group containing an evaluation scan |
+| Windows | 6 images, stride 4; bypass filtering for the first two windows |
+| Filtering | ColQwen2.5, similarity threshold 0.5; retained images become retrieval queries |
+| Query features | SigLIP2, with 10 nearest neighbors retrieved per query patch |
+| Patch weighting | Weight by patch uniqueness, with temperature 0.5 |
+| Reference selection | Sum frame scores across query images and select up to 5 reference frames globally across scenes |
+| Generation images | Use all original images in a window when at least one image is retained; skip retrieval and generation otherwise |
+| Generation model | Local Qwen3-VL-32B-Instruct, sampling temperature 0, thinking disabled |
+| Model reuse | One model instance shared by generation, object matching, and all scans in a run |
+| Output processing | Parse model output, preserve vocabulary deviations, complete missing visible pairs, merge windows, and rank candidates |
+| Evaluation | Category equivalence at both endpoints, relationship set@3, semantic predicate judge disabled |
 
-**截图参数与存档的区别：**目前那份旧式全局参考帧 SGR³ 重测使用 `patch_topk=5`，截图写的是 10。本包按截图固定为 10，并使用全新的检索缓存目录。旧 k=5 缓存、scene-argmax 缓存均不能混用。调整 ANN 查询 k 不要求重新训练已有 FAISS 索引，但必须重新计算窗口参考检索。
+Retrieval caches must match the configuration. Caches built with `patch_topk=5` or with scene argmax selection cannot be reused for this configuration. Changing the number of neighbors does not require retraining an existing FAISS index, but window retrieval must be recomputed.
 
-生成端当前保留了 `visible_pairs_v1` / `missing_pairs_keep_original_v3` 补边和编号谓词输出。这是现有重测实现，不应仅凭这个整理包宣称它与所有历史论文运行的提示词完全相同。`reports/SOURCE_ORIGINS.json` 记录了实际来源。
+Generation uses `visible_pairs_v1` and `missing_pairs_keep_original_v3`, with predicates encoded as IDs. Candidate truncation for the reported scores is applied in the shared evaluator.
 
-## 2. 脚本入口
+## Entry Points
 
-只从 `tools/` 运行；`src/`、`legacy_matching/` 是内部实现。
+Run the pipeline through `tools`. The `src` and `legacy_matching` directories contain internal implementations.
 
-| 入口 | 用途 | 资源 |
+| Script | Purpose | Resources |
 |---|---|---|
-| `tools/prepare_config.py` | 展开配置路径并检查论文参数，写入新配置文件 | CPU |
-| `tools/audit_kb.py` | 官方场景分组隔离检查；可加 `--actual-keys` 检查实际索引键 | CPU |
-| `tools/precompute_retrieval.py` | 用现有索引和已缓存特征，一次完成全部窗口的 k=10 参考检索 | CPU，需 FAISS 和较多内存 |
-| `tools/run_local.py` | 本地 Qwen 生成、实例匹配、统一评估；一个模型实例贯穿本次运行 | GPU；当前实现适合单 H200 |
-| `tools/evaluate.py` | 对已有图和物体对应重新计分，不调用模型 | 纯 Python / CPU |
-| `tools/verify_archives.py` | 对项目已有主表和消融存档做回归核验 | CPU |
-| `tools/preprocess.py` | 可选：重新计算 ColQwen 决策和 SigLIP 查询特征 | GPU |
-| `tools/embed_reference.py` | 可选：沿用旧 4×6 SigLIP 编码方法重算参考特征，先排除测试场景家族 | GPU |
-| `tools/build_kb.py` | 可选：从现有参考特征另建场景隔离索引 | CPU |
+| `tools/prepare_config.py` | Resolve paths and validate the configuration | CPU |
+| `tools/audit_kb.py` | Check scene exclusion; add `--actual-keys` to inspect index keys | CPU |
+| `tools/precompute_retrieval.py` | Compute retrieval for all windows using the existing index and cached query features | CPU, FAISS, and sufficient memory |
+| `tools/run_local.py` | Run generation, object matching, and evaluation | GPU; intended for a single H200 |
+| `tools/evaluate.py` | Score existing graphs and object mappings without model inference | Python standard library / CPU |
+| `tools/preprocess.py` | Optionally recompute ColQwen decisions and SigLIP query features | GPU |
+| `tools/embed_reference.py` | Optionally compute reference embeddings with a 4 × 6 grid after scene exclusion | GPU |
+| `tools/build_kb.py` | Build a new index from reference features after scene exclusion | CPU |
 
-关键实现：`src/vision_legacy.py` 是加权 patch 检索；`src/filter_legacy.py` 是 ColQwen；`src/graph_legacy.py` 是窗口和合并；`src/run.py` 是生成；`src/evaluate_single_scan_local.py` 是物体对应；`evaluation/evaluate.py` 是最终评分。
+The main implementation files are `src/vision_legacy.py` for retrieval, `src/filter_legacy.py` for filtering, `src/graph_legacy.py` for windows and graph merging, `src/run.py` for generation, `src/evaluate_single_scan_local.py` for object association, and `evaluation/evaluate.py` for scoring.
 
-`src/dashscope_client.py` 仅保留原 JSON 解析函数，以兼容导入名，已移除 HTTP/API 客户端。这个包不需要 DashScope key。
+Inference runs locally. A DashScope API key is not required.
 
-## 3. 当前工作区使用方法
+## Running the Pipeline
 
-先设置脚本包路径、已有环境和模型位置。下面的 Python 路径是整理时可访问的环境，没有新安装包。`requirements-observed.txt` 只记录该环境的实际版本，不是可直接安装的完整锁文件。FAISS 检索需另外使用已安装 FAISS 的环境；评分只需 Python 标准库。
+Set the package, Python environment, and model paths for your installation. Replace the example paths below. `requirements-observed.txt` lists versions from the existing environment; it is not a complete installation lock file. Retrieval requires an environment with FAISS and PyTorch. The standalone evaluator uses the Python standard library.
 
 ```bash
-SGR3_PACKAGE='/hfs2/work/workspace/scratch/ka_rg5174-rag_migration/sgr3'
-SGR3_PYTHON='/hkfs/work/workspace/scratch/rg5174-rag4_recovered/rg5174-ragspace4-1791422104/rg5174-ragspace-1780103764/envs/rag_env/bin/python'
-QWEN_MODEL_PATH='/hkfs/work/workspace/scratch/rg5174-rag4_recovered/rg5174-ragspace4-1791422104/rg5174-ragspace-1780103764/models/Qwen3-VL-32B-Instruct'
+SGR3_PACKAGE='/path/to/SGR3Model/sgr3'
+SGR3_PYTHON='/path/to/environment/bin/python'
+QWEN_MODEL_PATH='/path/to/models/Qwen3-VL-32B-Instruct'
 export SGR3_PACKAGE SGR3_PYTHON QWEN_MODEL_PATH
 ```
 
-生成一个自己的配置文件。目录迁移时加 `--project-root /实际项目根目录`，并核对配置内的数据、模型缓存和索引路径。
+Create a resolved configuration. The default project root is the parent of `sgr3`. Use `--project-root` to point to the project containing your data and cached artifacts, and check the paths in the generated configuration.
 
 ```bash
-"$SGR3_PYTHON" "$SGR3_PACKAGE/tools/prepare_config.py" --output /新工作目录/paper_config.json
-"$SGR3_PYTHON" "$SGR3_PACKAGE/tools/audit_kb.py" --config /新工作目录/paper_config.json
-"$SGR3_PYTHON" "$SGR3_PACKAGE/tools/run_local.py" --config /新工作目录/paper_config.json
+"$SGR3_PYTHON" "$SGR3_PACKAGE/tools/prepare_config.py" --project-root /path/to/project --output /path/to/work/paper_config.json
+
+"$SGR3_PYTHON" "$SGR3_PACKAGE/tools/audit_kb.py" --config /path/to/work/paper_config.json --actual-keys
+
+"$SGR3_PYTHON" "$SGR3_PACKAGE/tools/run_local.py" --config /path/to/work/paper_config.json
 ```
 
-没有 `--execute` 时，模型运行、预处理、embedding、建库和预检索入口只检查/打印计划，不进行模型推理。若预检报告 `needs_new_k10_retrieval_cache`，先运行下面的预检索命令生成缓存。
+The generation, preprocessing, embedding, index construction, and retrieval preparation commands print plans or perform preflight checks unless `--execute` is supplied. If preflight reports `needs_new_k10_retrieval_cache`, prepare the retrieval cache first.
 
-实际运行应先在 CPU 资源上完成参考检索，再在 GPU 资源上测试一个 scan。示例中的绝对路径占位符需要替换。
+Compute retrieval on CPU, then run a single scan on GPU:
 
 ```bash
-/具有FAISS和torch的环境/bin/python "$SGR3_PACKAGE/tools/precompute_retrieval.py" --config /新工作目录/paper_config.json --execute
+/path/to/faiss-environment/bin/python "$SGR3_PACKAGE/tools/precompute_retrieval.py" --config /path/to/work/paper_config.json --execute
+
 export HF_HUB_OFFLINE=1
 export TRANSFORMERS_OFFLINE=1
 export VLLM_WORKER_MULTIPROC_METHOD=spawn
-"$SGR3_PYTHON" "$SGR3_PACKAGE/tools/run_local.py" --config /新工作目录/paper_config.json --model-path "$QWEN_MODEL_PATH" --output-root /新工作目录/pilot --scans 一个测试scan的UUID --execute
+
+"$SGR3_PYTHON" "$SGR3_PACKAGE/tools/run_local.py" --config /path/to/work/paper_config.json --model-path "$QWEN_MODEL_PATH" --output-root /path/to/work/pilot --scans SCAN_UUID --execute
 ```
 
-去掉 `--scans` 才会处理全部 47 scans。正式输出必须使用新目录；不会覆盖旧结果。这个简单入口按 scan 顺序执行，不自动申请或续订 Slurm，也不自动恢复中断目录；长实验可分成多个 scan 子集，保留各自预测后汇总到同一评估 manifest。未完成的 scan 仍在 New 分母内，部分结果明确标记为非最终结果。
+Omit `--scans` to process all 47 scans. Use a new output directory for each run. Scans are processed sequentially; the entry point does not submit Slurm jobs or resume an interrupted output directory. Longer runs can process separate scan subsets, whose predictions can then be combined in one evaluation manifest.
 
-生成前从已封存的检索缓存读取图片和参考边，不加载 FAISS。`reports/model_path.txt`、运行配置、源码副本、预检记录、逐窗口响应与最终图都保存在新运行目录。模型初始化一次的检查贯穿每个 scan。
+Generation reads images and reference edges from the prepared retrieval cache without loading FAISS. Each output directory stores the configuration, source snapshots, model path, window prompts and responses, object mappings, final graphs, and scores. `slurm/local_qwen_example.sbatch` provides an example job script.
 
-## 4. 新 eval：精确定义与独立使用
+## Evaluation
 
-固定协议名：`robio-category-equivalence-directed-set-v4`；别名文件：`evaluation/object_aliases_v2.json`。
+Protocol: `robio-category-equivalence-directed-set-v4`.
 
-1. 使用有效 ID 和一对一 GT→预测实例对应。物体类别采用固定同义词表，包含已确认的 `chair/armchair`、`table/desk`、`heater/radiator` 等；不临时调用语义模型猜同义词。
-2. 同一有向物体对的谓词按导出顺序合并、归一化、去重，再取前三个非 none 候选。不会把无关系边计作正关系命中。
-3. `H`：两个端点都已对应且类别正确，并且 GT 谓词命中前三候选的 **GT 关系标注条数**。同一对多个 GT 谓词分别计数。
-4. `D_Old`：两个端点已对应且类别正确、预测对有非空候选的 GT 关系标注条数。`Old = H / D_Old`。
-5. `D_New`：固定测试名单的全部正 GT 关系，完整 47 scans 时为 10,125。`New = H / D_New`。漏物体、漏关系及失败 scan 不从 New 分母删除。
-6. `New mRecall`：对这份固定测试集上有 GT 的 25 个谓词类别，分别算 `H_r / D_New,r`，再等权平均。零命中类别保留。命中同样要求两个端点类别正确。
-7. `object_category_recall_after_association`：类别正确且对应成功的 GT 物体数 / 全部 GT 物体数。它不是 GNN 分类器 Object R@10，也不是不检查类别的实例对应率。
-8. `node_ratio`：先汇总所有预测节点数，再除以所有 GT 节点数。它不受类别是否正确影响。
+Object equivalences are defined in `evaluation/object_aliases_v2.json` and applied consistently to both endpoint categories. Examples include chair/armchair, table/desk, and heater/radiator. Predicate judging by a semantic model is disabled.
 
-**set@3 不标为联合 R@1。**GNN、其他 baseline 和 SGR³ 在同一图/对应格式上使用同一个评分入口。现有 GNN 导出规则（预测 Top1 物体类别，谓词阈值后按分数排序）并未由本包偷偷修改。原生 GNN Object R@10、Predicate R@3 是另外的边际指标，不从这里的关系命中率替代生成。
+1. GT IDs and predicted IDs must exist in their respective graphs. GT to prediction mappings must be one to one.
+2. For each directed object pair, merge predicates in exported order, normalize aliases, remove duplicates, exclude none candidates, and retain the first three.
+3. `H` counts positive GT relationship annotations whose endpoints are associated with objects of equivalent categories and whose predicate appears among the retained candidates. Multiple annotations for one pair are counted separately.
+4. `D_Old` counts positive GT annotations with correctly categorized, associated endpoints and a nonempty predicted candidate set. `Old = H / D_Old`.
+5. `D_New` counts all positive GT relationships in the fixed evaluation split: 10,125 for all 47 scans. `New = H / D_New`. Unmatched objects, incorrect categories, omitted pairs, and failed predictions remain in this denominator.
+6. `New mRecall` averages `H_r / D_New,r` equally across the 25 predicate classes with positive GT support, including classes with zero hits. Counts are pooled across scans before calculating recall.
+7. `object_category_recall_after_association` is the number of correctly categorized, associated GT objects divided by all GT objects. It differs from classifier Object R@10 and from instance association recall without a category check.
+8. `node_ratio` is the total number of predicted nodes divided by the total number of GT nodes.
 
-单个 prediction 文件示例：
+Relationship set@3 differs from joint triplet R@1. Native classifier Object R@10 and Predicate R@3 are separate metrics. Graphs from different methods can use this shared evaluator after conversion to the prediction and mapping formats below. GNN export uses the top category and predicates ranked by score after thresholding.
+
+Example prediction:
 
 ```json
 {"nodes":[{"id":10,"name":"armchair"},{"id":20,"name":"desk"}],"edges":[{"src":10,"tgt":20,"c_edge":["left","close by","front"]}]}
 ```
 
-mapping 示例：`{"1":"10","2":"20","3":"none"}`，方向是 GT ID → 预测 ID。也接受 `{"gt2pred":{...}}` 外层结构；旧 JSONL 需先按 scan 整理为该格式，不能直接作为 mapping 传入。
+Example mapping, from GT ID to predicted ID:
 
-评估 manifest 示例（实际应列全 47 个 scan；缺项作为 pending，不偷偷缩小分母）：
+```json
+{"1":"10","2":"20","3":"none"}
+```
+
+A wrapper of the form `{"gt2pred":{...}}` is also accepted. Convert legacy JSONL matching records into one mapping file per scan before evaluation.
+
+An evaluation manifest references the full split and the available scan outputs:
 
 ```json
 {
-  "method":"SGR3_paper",
-  "split":"/实际路径/evaluation_scans.txt",
-  "GT_root":"/实际路径/data/3RScan",
-  "scans":{
-    "一个测试scan的UUID":{
-      "state":"complete",
-      "prediction":"/实际路径/graph_final.json",
-      "mapping":"/实际路径/object_matching.json"
+  "method": "SGR3_paper",
+  "split": "/path/to/SGR3Model/sgr3/splits/evaluation_scans.txt",
+  "GT_root": "/path/to/project/data/3RScan",
+  "scans": {
+    "SCAN_UUID": {
+      "state": "complete",
+      "prediction": "/path/to/graph_final.json",
+      "mapping": "/path/to/object_matching.json"
     }
   }
 }
 ```
 
+Scans missing from the manifest are marked pending, and their GT annotations remain in the New denominator. Outputs with pending scans are marked as partial results.
+
 ```bash
-python "$SGR3_PACKAGE/tools/evaluate.py" --manifest /实际路径/manifest.json --output /新结果路径/scores.json
+python "$SGR3_PACKAGE/tools/evaluate.py" --manifest /path/to/manifest.json --output /path/to/work/scores.json
 ```
 
-生成流程会自动写出这种 manifest 和分数。`runs/.../object_matching/results.json` 是匹配脚本保留的**旧诊断输出**；论文最终值应读取新入口产生的 `reports/manifest_XX_scores.json`，不要混用。
+The generation entry point writes manifests and scores automatically. Read the shared evaluation results from `reports/manifest_XX_scores.json`. The matching output `runs/.../object_matching/results.json` contains separate legacy diagnostics.
 
-## 5. 数据和缓存依赖
+## Data and Cache Dependencies
 
-本包只包含代码、固定 split/词表/别名及核验记录，不包含模型、RGB、GT、embedding、索引、大型特征缓存、旧预测或凭据。当前配置引用现有的场景隔离 KB 和已经完成的 ColQwen/SigLIP 查询特征缓存。即使 embedding 根目录中含有旧测试扫描，新建库入口仍按官方场景家族排除。
+The repository contains code, the evaluation split, taxonomies, and object aliases. Models, RGB images, GT data, embeddings, FAISS indexes, and feature caches must be supplied separately. Configure their locations in the resolved configuration.
 
-可选预处理入口仍依赖每个测试 scan 已有的 `siglip2_val/patch_tokens_fp16.npy` 和 `paths.json` 作为筛选候选的 proxy；没有把这些既存数据的历史生产过程声称为已重新复现。默认无需重算它们。
+The default configuration references an existing KB with scene exclusion and completed ColQwen/SigLIP query caches. Index construction excludes all evaluation scene families even if older embeddings for those scans are present in the embedding directory.
 
-若确需重算参考 embedding/索引，用 `embed_reference.py`、`build_kb.py`，指定全新输出目录，并在配置里明确指向新产物。若重算测试特征，使用 `preprocess.py`，完成全部 47 scans 后再把 `precomputed_cache_dir` 指向它；单独 shard 不能冒充完整缓存。
+Optional preprocessing also requires the existing `siglip2_val/patch_tokens_fp16.npy` and `paths.json` files for each scan as proxies for selecting comparison candidates. The default workflow reuses the prepared caches.
+
+To recompute reference features or construct an index, use `tools/embed_reference.py` or `tools/build_kb.py` with a new output directory, then update the configuration to reference the new artifacts. To recompute query features, use `tools/preprocess.py` and finish all 47 scans before pointing `precomputed_cache_dir` to the new cache. A single shard is not a complete cache.

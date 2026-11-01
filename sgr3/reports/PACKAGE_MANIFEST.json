@@ -17,7 +17,8 @@
     "Parse JSON before expanding paths; read bundled matching source as UTF-8; all nine CPU tests pass on Windows without UTF-8 overrides.",
     "Simplify README verification prose and retain operational cache preparation instructions.",
     "Remove test records and repair history from README at user request; use 复现 terminology.",
-    "Move package to repository root sgr3 and resolve default project root as its parent; update README links."
+    "Move package to repository root sgr3 and resolve default project root as its parent; update README links.",
+    "Replace Chinese README with English setup, execution, evaluation and data documentation."
   ],
   "copied_source_comparison": {
     "src/evaluate_single_scan_local.py": {
@@ -177,7 +178,7 @@
     "evaluation/synonym_aware.py": "0527676495eabe166b9236efbdf538a18590b410999ca3449b1333b506537d83",
     "legacy_matching/eva_final_no_vlm.py": "ddb33b990ccf5e428651ed4b074e604da3a95c808c0304476c9595435ac370fd",
     "legacy_matching/eva_qwen8b.py": "f217937d716e84e7d426968c6ae522be4666d4dcb77b9e655419865144dd7e50",
-    "README.md": "733cb15902d54f8001283dd47319070192e1b9dbb34cd215776d0fde8e12ae7b",
+    "README.md": "a62eaa03794414d78baa0d1700768608f64a6761b9777bb4541500187d79bc51",
     "reports/archive_regression.json": "5718129cf2f755da3dcd91f2cbaf38803f3bfa059a65010dfc949f240aee17b6",
     "reports/config.resolved.json": "9c2294853b1cb779758de92c58274b9187b66270147fd9cdfbc3c431b1cc865e",
     "reports/kb_manifest_audit.json": "c6f41505cd16371fc47e052083fcb1552a7635dbfb113d869fae108f4195d369",
@@ -226,6 +227,6 @@
     "tools/run_local.py": "daae837a589b2e54ccbc2207320490694c916027d8bfd9ddd474e6a71af5c305",
     "tools/verify_archives.py": "4c96d6764cdb3311ff831b2255daadcc305ba2e965a2af639a3090fd089bc8db"
   },
-  "updated_utc": "2026-11-01T12:50:45.727152+00:00",
+  "updated_utc": "2026-11-01T13:32:31.589631+00:00",
   "package_revision": 3
 }
