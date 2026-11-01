@@ -1,32 +1,15 @@
+# Data Processing
 
-# Structure
-kId: keyfame index
-imgBoxData: [x1/img_w,y1/img_h,x2/img_w,y2/img_h, occlu_level] 
+Scripts for preparing annotations, visibility graphs, and image crops. Dataset preparation entry points are listed in the [framework README](../README.md).
 
+## Proposal Format
 
+`proposals.h5` stores objects and keyframes for each scan:
+
+```text
+<scan_id>
+  nodes/<object_id>   keyframe indices; label attribute
+  kfs/<keyframe_id>   bounding box rows; seg2idx attribute
 ```
-proposals.h5
-{
-    'args': arguments.
-    'label_type': label type
-    scan_id: {
-        'nodes': {
-            oid: # object Index
-                data = [keyframe indices], 
-                attrs: {
-                    'label': the label of this object
-                }
-        }
-        'kfs': {
-            kid: # keyframe index
-                data = [[normalized image corners \in R^{4}, occlusion], ...]
-                attrs: {
-                    'seg2idx' [(kid, idx), ...] # the idx here is the list index in data
-                }
-        }
-    },
-    ...
-}
-# For estimated segments, the oid is the segment index instead of the object index.
 
-```
+Each bounding box row contains `[x1 / width, y1 / height, x2 / width, y2 / height, occlusion]`. The `seg2idx` attribute maps an object or segment ID to its bounding box row index. For estimated segments, node IDs refer to segments rather than GT object instances.
