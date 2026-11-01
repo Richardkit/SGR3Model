@@ -118,10 +118,6 @@ The generation entry point writes manifests and scores automatically. Read the s
 
 ## Data and Cache Dependencies
 
-The repository contains code, the evaluation split, taxonomies, and object aliases. Models, RGB images, GT data, embeddings, FAISS indexes, and feature caches must be supplied separately. Configure their locations in the resolved configuration.
+Provide the model, RGB images, ground truth annotations, embeddings, FAISS index, and feature caches separately, and set their paths in the configuration.
 
-The default configuration references an existing KB with scene exclusion and completed ColQwen/SigLIP query caches. Index construction excludes all evaluation scene families even if older embeddings for those scans are present in the embedding directory.
-
-Optional preprocessing also requires the existing `siglip2_val/patch_tokens_fp16.npy` and `paths.json` files for each scan as proxies for selecting comparison candidates. The default workflow reuses the prepared caches.
-
-To recompute reference features or construct an index, use `tools/embed_reference.py` or `tools/build_kb.py` with a new output directory, then update the configuration to reference the new artifacts. To recompute query features, use `tools/preprocess.py` and finish all 47 scans before pointing `precomputed_cache_dir` to the new cache. A single shard is not a complete cache.
+Reuse compatible caches or prepare them with `tools/preprocess.py`, `tools/embed_reference.py`, and `tools/build_kb.py`. Preprocessing requires each scan's existing `siglip2_val/patch_tokens_fp16.npy` and `paths.json`. Complete the query cache for the full evaluation split before running generation.
