@@ -2,7 +2,7 @@ import json
 from pathlib import Path
 
 PACKAGE = Path(__file__).resolve().parents[1]
-DEFAULT_PROJECT = PACKAGE.parents[1]
+DEFAULT_PROJECT = PACKAGE.parent
 
 
 def load_config(path=None, project_root=None):
