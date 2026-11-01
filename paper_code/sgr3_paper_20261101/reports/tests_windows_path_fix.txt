@@ -1,0 +1,18 @@
+[RAG-FrameVote] top reference frames:
+  scan=22222222-2222-2222-2222-222222222222, frame=3, score=1.2000
+  scan=11111111-1111-1111-1111-111111111111, frame=1, score=0.9000
+[RAG-FrameVote] saved -> C:\Users\83842\AppData\Local\Temp\tmp58krh246\result.json
+test_frames_from_multiple_scans_compete_by_cumulative_score (test_global_retrieval.GlobalRetrievalTests.test_frames_from_multiple_scans_compete_by_cumulative_score) ... ok
+test_relocated_package_uses_its_own_legacy_parser (test_matching_compat.MatchingCompatTests.test_relocated_package_uses_its_own_legacy_parser) ... ok
+test_unknown_ids_abstain_but_old_padding_is_preserved (test_matching_compat.MatchingCompatTests.test_unknown_ids_abstain_but_old_padding_is_preserved) ... ok
+test_aliases_both_endpoints_and_three_distinct_candidates (test_protocol.ProtocolTests.test_aliases_both_endpoints_and_three_distinct_candidates) ... ok
+test_full_denominator_zero_hit_classes_and_pending_scan (test_protocol.ProtocolTests.test_full_denominator_zero_hit_classes_and_pending_scan) ... ok
+test_mapping_must_be_one_to_one (test_protocol.ProtocolTests.test_mapping_must_be_one_to_one) ... ok
+test_original_window_and_first_two_warmup (test_protocol.ProtocolTests.test_original_window_and_first_two_warmup) ... ok
+test_scene_family_excludes_unrelated_uuid_prefix (test_protocol.ProtocolTests.test_scene_family_excludes_unrelated_uuid_prefix) ... ok
+test_wrong_cache_policy_or_k_is_not_reused (test_protocol.ProtocolTests.test_wrong_cache_policy_or_k_is_not_reused) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.211s
+
+OK

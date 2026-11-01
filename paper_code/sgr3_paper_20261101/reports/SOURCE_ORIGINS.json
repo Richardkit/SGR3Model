@@ -1,0 +1,118 @@
+{
+  "src/evaluate_single_scan_local.py": {
+    "source": "/hfs2/work/workspace/scratch/ka_rg5174-rag_migration/experiments/robio_sgr3_after_conceptgraphs_20261031/src/evaluate_single_scan_local.py",
+    "source_sha256": "0124d9773b37cba9be3df968c4e47b904bea075a5f91e7f3015e27a652e02098"
+  },
+  "src/run.py": {
+    "source": "/hfs2/work/workspace/scratch/ka_rg5174-rag_migration/experiments/robio_sgr3_after_conceptgraphs_20261031/src/run.py",
+    "source_sha256": "4d6eaf369430e895f425a30d09f417e372b3ebe902a3995ed40389aa573e3062"
+  },
+  "src/batch_client.py": {
+    "source": "/hfs2/work/workspace/scratch/ka_rg5174-rag_migration/experiments/robio_sgr3_after_conceptgraphs_20261031/src/batch_client.py",
+    "source_sha256": "491ade54cec6e2212c5f6011853b837d67af32697bfe1f8173ed0973293bf0be"
+  },
+  "src/local_matching_client.py": {
+    "source": "/hfs2/work/workspace/scratch/ka_rg5174-rag_migration/experiments/robio_sgr3_after_conceptgraphs_20261031/src/local_matching_client.py",
+    "source_sha256": "a4dc6d7dd22b4727d22073a8ab1c1b85b48944e5de16bcd33d0313fc2c4075c6"
+  },
+  "src/graph_legacy.py": {
+    "source": "/hfs2/work/workspace/scratch/ka_rg5174-rag_migration/experiments/robio_sgr3_after_conceptgraphs_20261031/src/graph_legacy.py",
+    "source_sha256": "4f6ddeaba870f6e16fb58d497de477f6fb587abddb0b651037ac778c828c4862"
+  },
+  "src/common.py": {
+    "source": "/hfs2/work/workspace/scratch/ka_rg5174-rag_migration/experiments/robio_sgr3_after_conceptgraphs_20261031/src/common.py",
+    "source_sha256": "131b7726bb1b5cb96f83e114f4abbcb12bf3eadad7697263d4f12efe54ec136e"
+  },
+  "src/retrieval_cache.py": {
+    "source": "/hfs2/work/workspace/scratch/ka_rg5174-rag_migration/experiments/robio_sgr3_after_conceptgraphs_20261031/src/retrieval_cache.py",
+    "source_sha256": "41ed9c8fe95e6360a1ca66434128e61221716a6fe21b37804f0335e82d02db82"
+  },
+  "src/dashscope_client.py": {
+    "source": "/hfs2/work/workspace/scratch/ka_rg5174-rag_migration/experiments/robio_sgr3_after_conceptgraphs_20261031/src/dashscope_client.py",
+    "source_sha256": "19f3e55c8bc852bf4afc60e88b6c12d6463b9395d0efe37f885987b712107665"
+  },
+  "src/persistent_client.py": {
+    "source": "/hfs2/work/workspace/scratch/ka_rg5174-rag_migration/experiments/robio_sgr3_after_conceptgraphs_20261031/src/persistent_client.py",
+    "source_sha256": "fb86d2f834baaa1112df081c56c8e534fe7afa63fae807cc86fc37c725e12feb"
+  },
+  "src/matching_compat.py": {
+    "source": "/hfs2/work/workspace/scratch/ka_rg5174-rag_migration/experiments/robio_sgr3_after_conceptgraphs_20261031/src/matching_compat.py",
+    "source_sha256": "74d9730814d46259119fa70a2ba735b8cdb1c626e5ecf3510bb411b668c5f011"
+  },
+  "src/local_vllm_client.py": {
+    "source": "/hfs2/work/workspace/scratch/ka_rg5174-rag_migration/experiments/robio_sgr3_after_conceptgraphs_20261031/src/local_vllm_client.py",
+    "source_sha256": "2f8a24fb98a5f236b429dea4660f92b188a69a9052dbc5229c3b8ea1e6acdb4d"
+  },
+  "src/coverage_completion.py": {
+    "source": "/hfs2/work/workspace/scratch/ka_rg5174-rag_migration/experiments/robio_sgr3_after_conceptgraphs_20261031/src/coverage_completion.py",
+    "source_sha256": "5511319577d130b7de978dc4729592b37e266827494bcdb0b3e964b149950777"
+  },
+  "src/soft_output.py": {
+    "source": "/hfs2/work/workspace/scratch/ka_rg5174-rag_migration/experiments/robio_sgr3_after_conceptgraphs_20261031/src/soft_output.py",
+    "source_sha256": "2c5ee9bbf6efa5164c07eacb296ee0685567a344c576655ae7a1892e31a3d8ca"
+  },
+  "src/vision_legacy.py": {
+    "source": "/hfs2/work/workspace/scratch/ka_rg5174-rag_migration/experiments/robio_retest_20261030_cached_rag/src/vision_legacy.py",
+    "source_sha256": "5354984ffe27090ff8d453f511922bb254bf26560f3ca36e6b0da3301fb1fbc0"
+  },
+  "src/prepared_scan.py": {
+    "source": "/hfs2/work/workspace/scratch/ka_rg5174-rag_migration/experiments/robio_retest_20261030_cached_rag/src/prepared_scan.py",
+    "source_sha256": "e54f99f9215dd0ef3435567b405860eac1a503214b536ceaee841a7a4678ad9d"
+  },
+  "src/filter_legacy.py": {
+    "source": "/hfs2/work/workspace/scratch/ka_rg5174-rag_migration/experiments/robio_retest_20261030_cached_rag/src/filter_legacy.py",
+    "source_sha256": "e7ff9ac7c789421e981f4d5ed45ca4caafa8b1d2291c6ddf0a072772542802ee"
+  },
+  "tools/precompute_retrieval.py": {
+    "source": "/hfs2/work/workspace/scratch/ka_rg5174-rag_migration/experiments/robio_retest_20261030_cached_rag/tools/precompute_retrieval.py",
+    "source_sha256": "4f6ceac01bfee99bcdfeb7ab724394278f43611327cf71e07b9927ff14efbe0e"
+  },
+  "src/build_kb.py": {
+    "source": "/hfs2/work/workspace/scratch/ka_rg5174-rag_migration/experiments/robio_retest_20261030/src/build_kb.py",
+    "source_sha256": "61d583710b0e0c1c2cb09769c9c285868cd41df69607cc4eeddc312c8f14db8c"
+  },
+  "src/precompute_test_cache_shard.py": {
+    "source": "/hfs2/work/workspace/scratch/ka_rg5174-rag_migration/experiments/robio_retest_20261030/src/precompute_test_cache_shard.py",
+    "source_sha256": "2d2ef9e43913915934e3dbd0599058f083bda8c135599b981f41f56c7881f09f"
+  },
+  "legacy_matching/eva_qwen8b.py": {
+    "source": "/hfs2/work/workspace/scratch/ka_rg5174-rag_migration/RAG_baseline_Qwen3/evaluate/eva_qwen8b.py",
+    "source_sha256": "f217937d716e84e7d426968c6ae522be4666d4dcb77b9e655419865144dd7e50"
+  },
+  "legacy_matching/eva_final_no_vlm.py": {
+    "source": "/hfs2/work/workspace/scratch/ka_rg5174-rag_migration/RAG_baseline_Qwen3/evaluate/eva_final_no_vlm.py",
+    "source_sha256": "ddb33b990ccf5e428651ed4b074e604da3a95c808c0304476c9595435ac370fd"
+  },
+  "evaluation/base.py": {
+    "source": "/hfs2/work/workspace/scratch/ka_rg5174-rag_migration/robio_repro/protocol.py",
+    "source_sha256": "e20a87222e7bb6e0c55e4a517185d0cb5948166b54c1a3a846723885dfd03cbd"
+  },
+  "evaluation/class_aware.py": {
+    "source": "/hfs2/work/workspace/scratch/ka_rg5174-rag_migration/experiments/robio_class_aware_eval_20261031/class_aware.py",
+    "source_sha256": "de1b97c31b676c7b5cf068b7cf4b9acf319b86abf943b3fe8cffca86e56f63b4"
+  },
+  "evaluation/synonym_aware.py": {
+    "source": "/hfs2/work/workspace/scratch/ka_rg5174-rag_migration/experiments/robio_synonym_aware_eval_20261031/synonym_aware.py",
+    "source_sha256": "378170d7b5464135f94365ec42d2648d950c9cbbc28a9f9e12170bda03ed88cd"
+  },
+  "evaluation/object_aliases_v2.json": {
+    "source": "/hfs2/work/workspace/scratch/ka_rg5174-rag_migration/experiments/robio_category_equivalence_eval_20261031/object_aliases_v2.json",
+    "source_sha256": "a6b2ef4070b4ff1b8dc54c057e542830a305b314fe28be977c3f70ef5c0fec6a"
+  },
+  "splits/evaluation_scans.txt": {
+    "source": "/hfs2/work/workspace/scratch/ka_rg5174-rag_migration/experiments/robio_retest_20261030/splits/evaluation_scans.txt",
+    "source_sha256": "41af7cd5381e24d25f193cf6bd435cc5a6394147d565586f88d8104052072a63"
+  },
+  "taxonomy/classes.txt": {
+    "source": "/hfs2/work/workspace/scratch/ka_rg5174-rag_migration/3DSSG/data_GT/3RScan_3RScan160/classes.txt",
+    "source_sha256": "384335818eede1a98c4e788cd792de89ac98031c2528ffc93c4087f1838f517d"
+  },
+  "taxonomy/relationships.txt": {
+    "source": "/hfs2/work/workspace/scratch/ka_rg5174-rag_migration/3DSSG/data_GT/3RScan_3RScan160/relationships.txt",
+    "source_sha256": "be409fc18b5dfc1aadb064211884efb81c1c2299e49fd8004d7069c8657438ee"
+  },
+  "src/embedding_reference.py": {
+    "source": "/hfs2/work/workspace/scratch/ka_rg5174-rag_migration/3DSSG/embedding_and_indexing/embedding_without_valid.py",
+    "source_sha256": "afb6bc53059b401fcb82609764d1c8f1b1b10fdde3935b8c2d3c2f180ede9f4c"
+  }
+}

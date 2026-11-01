@@ -1,0 +1,10 @@
+{
+  "passed": true,
+  "scan": "0988ea72-eb32-2e61-8344-99e2283c2728",
+  "frames": 521,
+  "windows": 130,
+  "first_two_bypass": true,
+  "cache_encoder_hashes_compatible": true,
+  "matching_helper_functions_loadable": true,
+  "models_loaded": false
+}

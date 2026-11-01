@@ -1,0 +1,7 @@
+{
+  "python_syntax_files": 39,
+  "entrypoints_help_passed": true,
+  "slurm_syntax_passed": true,
+  "literal_credentials_found": 0,
+  "gpu_inference_started": false
+}

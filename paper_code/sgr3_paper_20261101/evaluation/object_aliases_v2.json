@@ -1,0 +1,959 @@
+{
+  "version": "object-category-equivalence-v2",
+  "scope": "all methods; fixed object synonyms plus exactly two owner-approved category merges",
+  "authoring_basis": "fixed indoor-object terminology, spelling and number inflections; no method/score-dependent rule selection",
+  "normalization": "lowercase, whitespace, underscore/hyphen word separators",
+  "exclusions": [
+    "No substring/fuzzy match",
+    "No descriptions or images used to repair category",
+    "No object Top10 GT selection",
+    "Unknown is not a generic object synonym",
+    "Bare bin, dryer, screen, computer and closet remain unmerged",
+    "No additional subtype merges beyond the two explicit owner-approved additions"
+  ],
+  "taxonomy_path": "/hfs2/work/workspace/scratch/ka_rg5174-rag_migration/experiments/robio_retest_20261030/protocol_audit_20261030/taxonomy/classes160.txt",
+  "taxonomy_sha256": "384335818eede1a98c4e788cd792de89ac98031c2528ffc93c4087f1838f517d",
+  "explicit_groups": [
+    {
+      "canonical": "sofa",
+      "members": [
+        "couch",
+        "sofa"
+      ],
+      "reason": "Common names for the same seating category."
+    },
+    {
+      "canonical": "sofa chair",
+      "members": [
+        "couch chair",
+        "sofa chair"
+      ],
+      "reason": "Same compound category with sofa/couch spelling."
+    },
+    {
+      "canonical": "cabinet",
+      "members": [
+        "cabinet",
+        "cupboard"
+      ],
+      "reason": "Indoor storage cabinet terminology; excludes shelves and drawers."
+    },
+    {
+      "canonical": "wardrobe",
+      "members": [
+        "clothes closet",
+        "clothing wardrobe",
+        "wardrobe"
+      ],
+      "reason": "Clothing-storage furniture names; bare closet is ambiguous and excluded."
+    },
+    {
+      "canonical": "bedside table",
+      "members": [
+        "bed side table",
+        "bedside table",
+        "night stand",
+        "nightstand"
+      ],
+      "reason": "Names for a table beside the bed."
+    },
+    {
+      "canonical": "coffee table",
+      "members": [
+        "coffee table",
+        "couch table"
+      ],
+      "reason": "Living-room coffee-table terminology."
+    },
+    {
+      "canonical": "side table",
+      "members": [
+        "end table",
+        "side table"
+      ],
+      "reason": "Common names for small side/end tables."
+    },
+    {
+      "canonical": "pillow",
+      "members": [
+        "cushion",
+        "pillow"
+      ],
+      "reason": "Shared loose soft-pad category in indoor object annotations."
+    },
+    {
+      "canonical": "heater",
+      "members": [
+        "heater",
+        "radiator"
+      ],
+      "reason": "Owner-approved equivalence example for indoor heating units."
+    },
+    {
+      "canonical": "carpet",
+      "members": [
+        "carpet",
+        "rug"
+      ],
+      "reason": "Floor textile category; excludes floor and mat."
+    },
+    {
+      "canonical": "bookshelf",
+      "members": [
+        "book case",
+        "book shelf",
+        "bookcase",
+        "bookshelf"
+      ],
+      "reason": "Furniture for storing books; excludes generic shelves."
+    },
+    {
+      "canonical": "trash can",
+      "members": [
+        "dustbin",
+        "garbage bin",
+        "garbage can",
+        "rubbish bin",
+        "trash bin",
+        "trash can",
+        "trashcan",
+        "waste basket",
+        "waste bin",
+        "wastebasket"
+      ],
+      "reason": "Waste containers; excludes bare bin, recycle bin, and loose garbage."
+    },
+    {
+      "canonical": "recycle bin",
+      "members": [
+        "recycle bin",
+        "recycling bin"
+      ],
+      "reason": "Recycling containers, kept separate from general waste bins."
+    },
+    {
+      "canonical": "clothes dryer",
+      "members": [
+        "clothes drier",
+        "clothes dryer",
+        "drying machine",
+        "laundry dryer",
+        "tumble drier",
+        "tumble dryer"
+      ],
+      "reason": "Laundry-drying machines; excludes ambiguous dryer and hand dryer."
+    },
+    {
+      "canonical": "washing machine",
+      "members": [
+        "clothes washer",
+        "laundry washer",
+        "washing machine"
+      ],
+      "reason": "Laundry washing machines; bare washer is ambiguous."
+    },
+    {
+      "canonical": "refrigerator",
+      "members": [
+        "fridge",
+        "refrigerator"
+      ],
+      "reason": "Common names for the same appliance."
+    },
+    {
+      "canonical": "microwave",
+      "members": [
+        "microwave",
+        "microwave oven"
+      ],
+      "reason": "Same appliance; excludes generic oven."
+    },
+    {
+      "canonical": "tv",
+      "members": [
+        "t.v.",
+        "television",
+        "television set",
+        "tv",
+        "tv set"
+      ],
+      "reason": "Television category; excludes generic screen and computer monitor."
+    },
+    {
+      "canonical": "monitor",
+      "members": [
+        "computer monitor",
+        "monitor",
+        "pc monitor"
+      ],
+      "reason": "Computer display device; generic screen is ambiguous."
+    },
+    {
+      "canonical": "pc",
+      "members": [
+        "desktop computer",
+        "desktop pc",
+        "pc",
+        "personal computer"
+      ],
+      "reason": "PC/desktop naming; excludes laptop and generic computer."
+    },
+    {
+      "canonical": "laptop",
+      "members": [
+        "laptop",
+        "laptop computer",
+        "notebook computer",
+        "notebook pc"
+      ],
+      "reason": "Portable computer names; bare notebook is ambiguous."
+    },
+    {
+      "canonical": "telephone",
+      "members": [
+        "phone",
+        "telephone"
+      ],
+      "reason": "Telephone object names."
+    },
+    {
+      "canonical": "socket",
+      "members": [
+        "electrical outlet",
+        "electrical socket",
+        "power outlet",
+        "power socket",
+        "socket",
+        "wall outlet"
+      ],
+      "reason": "Electrical connection outlet; excludes switch and power strip."
+    },
+    {
+      "canonical": "table lamp",
+      "members": [
+        "desk lamp",
+        "table lamp"
+      ],
+      "reason": "Same portable task/table lamp category; excludes generic lamp and floor lamp."
+    },
+    {
+      "canonical": "kitchen hood",
+      "members": [
+        "cooker hood",
+        "extractor hood",
+        "kitchen extractor hood",
+        "kitchen hood",
+        "range hood"
+      ],
+      "reason": "Kitchen extraction hood; excludes generic extractor fan."
+    },
+    {
+      "canonical": "bath cabinet",
+      "members": [
+        "bath cabinet",
+        "bathroom cabinet"
+      ],
+      "reason": "Bathroom cabinet terminology, kept separate from generic cabinet."
+    },
+    {
+      "canonical": "laundry basket",
+      "members": [
+        "clothes basket",
+        "laundry basket",
+        "washing basket"
+      ],
+      "reason": "Clothes/laundry basket category; excludes generic basket."
+    },
+    {
+      "canonical": "washing powder",
+      "members": [
+        "laundry powder",
+        "washing powder"
+      ],
+      "reason": "Powder laundry detergent names; excludes generic cleaner."
+    },
+    {
+      "canonical": "backpack",
+      "members": [
+        "backpack",
+        "knapsack",
+        "rucksack"
+      ],
+      "reason": "Same bag type; excludes generic bag."
+    },
+    {
+      "canonical": "clothes",
+      "members": [
+        "clothes",
+        "clothing",
+        "garments"
+      ],
+      "reason": "Clothing category; excludes cloth and specific jacket category."
+    },
+    {
+      "canonical": "blinds",
+      "members": [
+        "blinds",
+        "window blind",
+        "window blinds"
+      ],
+      "reason": "Window blind category; excludes curtains."
+    },
+    {
+      "canonical": "curtain",
+      "members": [
+        "curtain",
+        "curtains",
+        "window curtain",
+        "window curtains"
+      ],
+      "reason": "Window curtains; excludes shower curtain."
+    },
+    {
+      "canonical": "toilet paper",
+      "members": [
+        "toilet paper",
+        "toilet roll",
+        "toilet tissue"
+      ],
+      "reason": "Toilet tissue category; excludes paper towel."
+    },
+    {
+      "canonical": "toilet paper dispenser",
+      "members": [
+        "toilet paper dispenser",
+        "toilet paper holder",
+        "toilet roll holder"
+      ],
+      "reason": "Toilet-roll dispensing/holding fixture category."
+    },
+    {
+      "canonical": "doorframe",
+      "members": [
+        "door frame",
+        "doorframe"
+      ],
+      "reason": "Compound-word spacing only."
+    },
+    {
+      "canonical": "windowsill",
+      "members": [
+        "window sill",
+        "windowsill"
+      ],
+      "reason": "Compound-word spacing only."
+    },
+    {
+      "canonical": "shower head",
+      "members": [
+        "shower head",
+        "showerhead"
+      ],
+      "reason": "Compound-word spacing only."
+    },
+    {
+      "canonical": "book",
+      "members": [
+        "book",
+        "books"
+      ],
+      "reason": "Number inflection only; excludes pile of books."
+    },
+    {
+      "canonical": "flower",
+      "members": [
+        "flower",
+        "flowers"
+      ],
+      "reason": "Number inflection only; excludes plant."
+    },
+    {
+      "canonical": "shoe",
+      "members": [
+        "shoe",
+        "shoes"
+      ],
+      "reason": "Number inflection only; excludes shoe rack."
+    },
+    {
+      "canonical": "paper",
+      "members": [
+        "paper",
+        "papers"
+      ],
+      "reason": "Number inflection only; excludes paper towel and pile of papers."
+    },
+    {
+      "canonical": "napkin",
+      "members": [
+        "napkin",
+        "napkins"
+      ],
+      "reason": "Number inflection only."
+    },
+    {
+      "canonical": "object",
+      "members": [
+        "item",
+        "object",
+        "objects"
+      ],
+      "reason": "Generic object names only; never match a specific class or unknown."
+    },
+    {
+      "canonical": "stair",
+      "members": [
+        "stair",
+        "staircase",
+        "stairs"
+      ],
+      "reason": "Stair structure terminology."
+    },
+    {
+      "canonical": "pile of books",
+      "members": [
+        "book stack",
+        "pile of books",
+        "stack of books"
+      ],
+      "reason": "Book collection category; excludes a single book."
+    },
+    {
+      "canonical": "pile of papers",
+      "members": [
+        "paper stack",
+        "pile of papers",
+        "stack of papers"
+      ],
+      "reason": "Paper collection category; excludes individual paper."
+    },
+    {
+      "canonical": "pile of wood",
+      "members": [
+        "pile of wood",
+        "stack of wood",
+        "wood pile"
+      ],
+      "reason": "Wood collection word order."
+    },
+    {
+      "canonical": "chair",
+      "members": [
+        "arm chair",
+        "arm chairs",
+        "armchair",
+        "armchairs",
+        "chair",
+        "chairs"
+      ],
+      "reason": "Explicit owner-approved category equivalence: chair/armchair; applies to all methods."
+    },
+    {
+      "canonical": "table",
+      "members": [
+        "desk",
+        "desks",
+        "table",
+        "tables"
+      ],
+      "reason": "Explicit owner-approved category equivalence: table/desk; applies to all methods."
+    }
+  ],
+  "alias_to_canonical": {
+    "arm chair": "chair",
+    "arm chairs": "chair",
+    "armchair": "chair",
+    "armchairs": "chair",
+    "backpack": "backpack",
+    "backpacks": "backpack",
+    "bag": "bag",
+    "bags": "bag",
+    "ball": "ball",
+    "balls": "ball",
+    "bar": "bar",
+    "bars": "bar",
+    "basin": "basin",
+    "basins": "basin",
+    "basket": "basket",
+    "baskets": "basket",
+    "bath cabinet": "bath cabinet",
+    "bath cabinets": "bath cabinet",
+    "bathroom cabinet": "bath cabinet",
+    "bathroom cabinets": "bath cabinet",
+    "bathtub": "bathtub",
+    "bathtubs": "bathtub",
+    "bed": "bed",
+    "bed side table": "bedside table",
+    "bed side tables": "bedside table",
+    "beds": "bed",
+    "bedside table": "bedside table",
+    "bedside tables": "bedside table",
+    "bench": "bench",
+    "benches": "bench",
+    "bidet": "bidet",
+    "bidets": "bidet",
+    "bin": "bin",
+    "bins": "bin",
+    "blanket": "blanket",
+    "blankets": "blanket",
+    "blinds": "blinds",
+    "board": "board",
+    "boards": "board",
+    "book": "book",
+    "book case": "bookshelf",
+    "book cases": "bookshelf",
+    "book shelf": "bookshelf",
+    "book shelves": "bookshelf",
+    "book stack": "pile of books",
+    "book stacks": "pile of books",
+    "bookcase": "bookshelf",
+    "bookcases": "bookshelf",
+    "books": "book",
+    "bookshelf": "bookshelf",
+    "bookshelves": "bookshelf",
+    "bottle": "bottle",
+    "bottles": "bottle",
+    "box": "box",
+    "boxes": "box",
+    "bread": "bread",
+    "bucket": "bucket",
+    "buckets": "bucket",
+    "cabinet": "cabinet",
+    "cabinets": "cabinet",
+    "carpet": "carpet",
+    "carpets": "carpet",
+    "ceiling": "ceiling",
+    "ceilings": "ceiling",
+    "chair": "chair",
+    "chairs": "chair",
+    "cleanser": "cleanser",
+    "cleansers": "cleanser",
+    "clock": "clock",
+    "clocks": "clock",
+    "closet": "closet",
+    "closets": "closet",
+    "clothes": "clothes",
+    "clothes basket": "laundry basket",
+    "clothes baskets": "laundry basket",
+    "clothes closet": "wardrobe",
+    "clothes closets": "wardrobe",
+    "clothes drier": "clothes dryer",
+    "clothes driers": "clothes dryer",
+    "clothes dryer": "clothes dryer",
+    "clothes dryers": "clothes dryer",
+    "clothes washer": "washing machine",
+    "clothes washers": "washing machine",
+    "clothing": "clothes",
+    "clothing wardrobe": "wardrobe",
+    "clothing wardrobes": "wardrobe",
+    "clothings": "clothes",
+    "clutter": "clutter",
+    "coffee machine": "coffee machine",
+    "coffee machines": "coffee machine",
+    "coffee table": "coffee table",
+    "coffee tables": "coffee table",
+    "commode": "commode",
+    "commodes": "commode",
+    "computer desk": "computer desk",
+    "computer desks": "computer desk",
+    "computer monitor": "monitor",
+    "computer monitors": "monitor",
+    "cooker hood": "kitchen hood",
+    "cooker hoods": "kitchen hood",
+    "couch": "sofa",
+    "couch chair": "sofa chair",
+    "couch chairs": "sofa chair",
+    "couch table": "coffee table",
+    "couch tables": "coffee table",
+    "couches": "sofa",
+    "counter": "counter",
+    "counters": "counter",
+    "cup": "cup",
+    "cupboard": "cabinet",
+    "cupboards": "cabinet",
+    "cups": "cup",
+    "curtain": "curtain",
+    "curtains": "curtain",
+    "curtainses": "curtain",
+    "cushion": "pillow",
+    "cushions": "pillow",
+    "cutting board": "cutting board",
+    "cutting boards": "cutting board",
+    "decoration": "decoration",
+    "decorations": "decoration",
+    "desk": "table",
+    "desk lamp": "table lamp",
+    "desk lamps": "table lamp",
+    "desks": "table",
+    "desktop computer": "pc",
+    "desktop computers": "pc",
+    "desktop pc": "pc",
+    "desktop pcs": "pc",
+    "dining chair": "dining chair",
+    "dining chairs": "dining chair",
+    "dining table": "dining table",
+    "dining tables": "dining table",
+    "door": "door",
+    "door frame": "doorframe",
+    "door frames": "doorframe",
+    "doorframe": "doorframe",
+    "doorframes": "doorframe",
+    "doors": "door",
+    "drawer": "drawer",
+    "drawers": "drawer",
+    "drum": "drum",
+    "drums": "drum",
+    "drying machine": "clothes dryer",
+    "drying machines": "clothes dryer",
+    "dustbin": "trash can",
+    "dustbins": "trash can",
+    "electrical outlet": "socket",
+    "electrical outlets": "socket",
+    "electrical socket": "socket",
+    "electrical sockets": "socket",
+    "end table": "side table",
+    "end tables": "side table",
+    "extractor fan": "extractor fan",
+    "extractor fans": "extractor fan",
+    "extractor hood": "kitchen hood",
+    "extractor hoods": "kitchen hood",
+    "fireplace": "fireplace",
+    "fireplaces": "fireplace",
+    "floor": "floor",
+    "floors": "floor",
+    "flower": "flower",
+    "flowers": "flower",
+    "folder": "folder",
+    "folders": "folder",
+    "food": "food",
+    "footstool": "footstool",
+    "footstools": "footstool",
+    "frame": "frame",
+    "frames": "frame",
+    "fridge": "refrigerator",
+    "fridges": "refrigerator",
+    "fruit plate": "fruit plate",
+    "fruit plates": "fruit plate",
+    "garbage": "garbage",
+    "garbage bin": "trash can",
+    "garbage bins": "trash can",
+    "garbage can": "trash can",
+    "garbage cans": "trash can",
+    "garments": "clothes",
+    "garmentses": "clothes",
+    "grass": "grass",
+    "hand dryer": "hand dryer",
+    "hand dryers": "hand dryer",
+    "heater": "heater",
+    "heaters": "heater",
+    "item": "object",
+    "items": "object",
+    "jacket": "jacket",
+    "jackets": "jacket",
+    "jar": "jar",
+    "jars": "jar",
+    "kettle": "kettle",
+    "kettles": "kettle",
+    "kitchen appliance": "kitchen appliance",
+    "kitchen appliances": "kitchen appliance",
+    "kitchen cabinet": "kitchen cabinet",
+    "kitchen cabinets": "kitchen cabinet",
+    "kitchen counter": "kitchen counter",
+    "kitchen counters": "kitchen counter",
+    "kitchen extractor hood": "kitchen hood",
+    "kitchen extractor hoods": "kitchen hood",
+    "kitchen hood": "kitchen hood",
+    "kitchen hoods": "kitchen hood",
+    "knapsack": "backpack",
+    "knapsacks": "backpack",
+    "ladder": "ladder",
+    "ladders": "ladder",
+    "lamp": "lamp",
+    "lamps": "lamp",
+    "laptop": "laptop",
+    "laptop computer": "laptop",
+    "laptop computers": "laptop",
+    "laptops": "laptop",
+    "laundry basket": "laundry basket",
+    "laundry baskets": "laundry basket",
+    "laundry dryer": "clothes dryer",
+    "laundry dryers": "clothes dryer",
+    "laundry powder": "washing powder",
+    "laundry powders": "washing powder",
+    "laundry washer": "washing machine",
+    "laundry washers": "washing machine",
+    "light": "light",
+    "lights": "light",
+    "machine": "machine",
+    "machines": "machine",
+    "magazine rack": "magazine rack",
+    "magazine racks": "magazine rack",
+    "menu": "menu",
+    "menus": "menu",
+    "microwave": "microwave",
+    "microwave oven": "microwave",
+    "microwave ovens": "microwave",
+    "microwaves": "microwave",
+    "mirror": "mirror",
+    "mirrors": "mirror",
+    "monitor": "monitor",
+    "monitors": "monitor",
+    "napkin": "napkin",
+    "napkins": "napkin",
+    "night stand": "bedside table",
+    "night stands": "bedside table",
+    "nightstand": "bedside table",
+    "nightstands": "bedside table",
+    "notebook computer": "laptop",
+    "notebook computers": "laptop",
+    "notebook pc": "laptop",
+    "notebook pcs": "laptop",
+    "object": "object",
+    "objects": "object",
+    "organizer": "organizer",
+    "organizers": "organizer",
+    "ottoman": "ottoman",
+    "ottomans": "ottoman",
+    "oven": "oven",
+    "ovens": "oven",
+    "pack": "pack",
+    "packs": "pack",
+    "pan": "pan",
+    "pans": "pan",
+    "paper": "paper",
+    "paper stack": "pile of papers",
+    "paper stacks": "pile of papers",
+    "paper towel": "paper towel",
+    "paper towels": "paper towel",
+    "papers": "paper",
+    "pc": "pc",
+    "pc monitor": "monitor",
+    "pc monitors": "monitor",
+    "pcs": "pc",
+    "personal computer": "pc",
+    "personal computers": "pc",
+    "phone": "telephone",
+    "phones": "telephone",
+    "picture": "picture",
+    "pictures": "picture",
+    "pile of books": "pile of books",
+    "pile of papers": "pile of papers",
+    "pile of wood": "pile of wood",
+    "pile of woods": "pile of wood",
+    "pillow": "pillow",
+    "pillows": "pillow",
+    "pipe": "pipe",
+    "pipes": "pipe",
+    "plant": "plant",
+    "plants": "plant",
+    "plate": "plate",
+    "plates": "plate",
+    "player": "player",
+    "players": "player",
+    "pot": "pot",
+    "pots": "pot",
+    "power outlet": "socket",
+    "power outlets": "socket",
+    "power socket": "socket",
+    "power sockets": "socket",
+    "printer": "printer",
+    "printers": "printer",
+    "rack": "rack",
+    "racks": "rack",
+    "radiator": "heater",
+    "radiators": "heater",
+    "range hood": "kitchen hood",
+    "range hoods": "kitchen hood",
+    "recycle bin": "recycle bin",
+    "recycle bins": "recycle bin",
+    "recycling bin": "recycle bin",
+    "recycling bins": "recycle bin",
+    "refrigerator": "refrigerator",
+    "refrigerators": "refrigerator",
+    "rocking chair": "rocking chair",
+    "rocking chairs": "rocking chair",
+    "rubbish bin": "trash can",
+    "rubbish bins": "trash can",
+    "rucksack": "backpack",
+    "rucksacks": "backpack",
+    "rug": "carpet",
+    "rugs": "carpet",
+    "scale": "scale",
+    "scales": "scale",
+    "screen": "screen",
+    "screens": "screen",
+    "shelf": "shelf",
+    "shelves": "shelf",
+    "shoe": "shoe",
+    "shoe rack": "shoe rack",
+    "shoe racks": "shoe rack",
+    "shoes": "shoe",
+    "showcase": "showcase",
+    "showcases": "showcase",
+    "shower": "shower",
+    "shower curtain": "shower curtain",
+    "shower curtains": "shower curtain",
+    "shower floor": "shower floor",
+    "shower floors": "shower floor",
+    "shower head": "shower head",
+    "shower heads": "shower head",
+    "shower wall": "shower wall",
+    "shower walls": "shower wall",
+    "showerhead": "shower head",
+    "showerheads": "shower head",
+    "showers": "shower",
+    "side table": "side table",
+    "side tables": "side table",
+    "sink": "sink",
+    "sinks": "sink",
+    "soap dish": "soap dish",
+    "soap dishes": "soap dish",
+    "socket": "socket",
+    "sockets": "socket",
+    "sofa": "sofa",
+    "sofa chair": "sofa chair",
+    "sofa chairs": "sofa chair",
+    "sofas": "sofa",
+    "stack of books": "pile of books",
+    "stack of papers": "pile of papers",
+    "stack of wood": "pile of wood",
+    "stack of woods": "pile of wood",
+    "stair": "stair",
+    "staircase": "stair",
+    "staircases": "stair",
+    "stairs": "stair",
+    "stairses": "stair",
+    "stand": "stand",
+    "stands": "stand",
+    "stool": "stool",
+    "stools": "stool",
+    "stove": "stove",
+    "stoves": "stove",
+    "stuffed animal": "stuffed animal",
+    "stuffed animals": "stuffed animal",
+    "suitcase": "suitcase",
+    "suitcases": "suitcase",
+    "t.v.": "tv",
+    "t.v.s": "tv",
+    "table": "table",
+    "table lamp": "table lamp",
+    "table lamps": "table lamp",
+    "tables": "table",
+    "telephone": "telephone",
+    "telephones": "telephone",
+    "television": "tv",
+    "television set": "tv",
+    "television sets": "tv",
+    "televisions": "tv",
+    "toaster": "toaster",
+    "toasters": "toaster",
+    "toilet": "toilet",
+    "toilet brush": "toilet brush",
+    "toilet brushes": "toilet brush",
+    "toilet paper": "toilet paper",
+    "toilet paper dispenser": "toilet paper dispenser",
+    "toilet paper dispensers": "toilet paper dispenser",
+    "toilet paper holder": "toilet paper dispenser",
+    "toilet paper holders": "toilet paper dispenser",
+    "toilet papers": "toilet paper",
+    "toilet roll": "toilet paper",
+    "toilet roll holder": "toilet paper dispenser",
+    "toilet roll holders": "toilet paper dispenser",
+    "toilet rolls": "toilet paper",
+    "toilet tissue": "toilet paper",
+    "toilet tissues": "toilet paper",
+    "toilets": "toilet",
+    "towel": "towel",
+    "towels": "towel",
+    "trash bin": "trash can",
+    "trash bins": "trash can",
+    "trash can": "trash can",
+    "trash cans": "trash can",
+    "trashcan": "trash can",
+    "trashcans": "trash can",
+    "tube": "tube",
+    "tubes": "tube",
+    "tumble drier": "clothes dryer",
+    "tumble driers": "clothes dryer",
+    "tumble dryer": "clothes dryer",
+    "tumble dryers": "clothes dryer",
+    "tv": "tv",
+    "tv set": "tv",
+    "tv sets": "tv",
+    "tv stand": "tv stand",
+    "tv stands": "tv stand",
+    "tvs": "tv",
+    "vase": "vase",
+    "vases": "vase",
+    "wall": "wall",
+    "wall outlet": "socket",
+    "wall outlets": "socket",
+    "walls": "wall",
+    "wardrobe": "wardrobe",
+    "wardrobes": "wardrobe",
+    "washing basket": "laundry basket",
+    "washing baskets": "laundry basket",
+    "washing machine": "washing machine",
+    "washing machines": "washing machine",
+    "washing powder": "washing powder",
+    "washing powders": "washing powder",
+    "waste basket": "trash can",
+    "waste baskets": "trash can",
+    "waste bin": "trash can",
+    "waste bins": "trash can",
+    "wastebasket": "trash can",
+    "wastebaskets": "trash can",
+    "window": "window",
+    "window blind": "blinds",
+    "window blinds": "blinds",
+    "window curtain": "curtain",
+    "window curtains": "curtain",
+    "window curtainses": "curtain",
+    "window sill": "windowsill",
+    "window sills": "windowsill",
+    "windows": "window",
+    "windowsill": "windowsill",
+    "windowsills": "windowsill",
+    "wood pile": "pile of wood",
+    "wood piles": "pile of wood"
+  },
+  "base_policy_path": "/hfs2/work/workspace/scratch/ka_rg5174-rag_migration/experiments/robio_synonym_aware_eval_20261031/object_aliases_v1.json",
+  "base_policy_sha256": "299c94ea31b4cb710a59937c659821d105dd63142da739a4b3d37a56cf2701db",
+  "owner_approved_additions": [
+    [
+      "chair",
+      "armchair"
+    ],
+    [
+      "table",
+      "desk"
+    ]
+  ],
+  "additions_meaning": "Task-defined category equivalence, including subtype/functional variants; not strict lexical synonymy",
+  "changed_entries": {
+    "arm chair": {
+      "previous": "armchair",
+      "current": "chair"
+    },
+    "arm chairs": {
+      "previous": "armchair",
+      "current": "chair"
+    },
+    "armchair": {
+      "previous": "armchair",
+      "current": "chair"
+    },
+    "armchairs": {
+      "previous": "armchair",
+      "current": "chair"
+    },
+    "desk": {
+      "previous": "desk",
+      "current": "table"
+    },
+    "desks": {
+      "previous": "desk",
+      "current": "table"
+    }
+  }
+}

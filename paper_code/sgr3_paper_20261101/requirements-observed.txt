@@ -1,0 +1,14 @@
+# Versions observed in the existing local vLLM runtime; not a new installation lock.
+torch==2.9.0
+torchvision==0.24.0
+transformers==4.57.3
+vllm==0.11.2
+qwen-vl-utils==0.0.14
+numpy==1.26.4
+# faiss-cpu not installed in this environment
+Pillow==12.0.0
+colpali-engine==0.3.14.dev15+g51ccfe76a
+peft==0.17.1
+accelerate==1.12.0
+huggingface-hub==0.36.0
+safetensors==0.7.0
