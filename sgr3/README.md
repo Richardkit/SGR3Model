@@ -4,49 +4,26 @@ This directory contains the SGR³ pipeline for scene graph generation from RGB s
 
 ## Configuration
 
-The default settings are defined in `configs/paper.json`.
-
-| Stage | Setting |
-|---|---|
-| Evaluation split | 47 scans, 1,503 ground truth objects, 10,125 positive relationship annotations |
-| Scene exclusion | Exclude every reference/rescan group containing an evaluation scan |
-| Windows | 6 images, stride 4; bypass filtering for the first two windows |
-| Filtering | ColQwen2.5, similarity threshold 0.5; retained images become retrieval queries |
-| Query features | SigLIP2, with 10 nearest neighbors retrieved per query patch |
-| Patch weighting | Weight by patch uniqueness, with temperature 0.5 |
-| Reference selection | Sum frame scores across query images and select up to 5 reference frames globally across scenes |
-| Generation images | Use all original images in a window when at least one image is retained; skip retrieval and generation otherwise |
-| Generation model | Local Qwen3-VL-32B-Instruct, sampling temperature 0, thinking disabled |
-| Model reuse | One model instance shared by generation, object matching, and all scans in a run |
-| Output processing | Parse model output, preserve vocabulary deviations, complete missing visible pairs, merge windows, and rank candidates |
-| Evaluation | Category equivalence at both endpoints, relationship set@3, semantic predicate judge disabled |
-
-Retrieval caches must match the configuration. Caches built with `patch_topk=5` or with scene argmax selection cannot be reused for this configuration. Changing the number of neighbors does not require retraining an existing FAISS index, but window retrieval must be recomputed.
-
-Generation uses `visible_pairs_v1` and `missing_pairs_keep_original_v3`, with predicates encoded as IDs. Candidate truncation for the reported scores is applied in the shared evaluator.
+Default parameters are provided in [configs/paper.json](configs/paper.json). See the paper for the method and experimental settings. Before running, resolve the configuration and set the paths to your data, model, index, and feature caches as shown below. Retrieval caches must match the configuration used to create them.
 
 ## Entry Points
 
-Run the pipeline through `tools`. The `src` and `legacy_matching` directories contain internal implementations.
+| Script | Purpose |
+|---|---|
+| `tools/prepare_config.py` | Resolve paths and validate the configuration |
+| `tools/audit_kb.py` | Check that the knowledge base excludes evaluation scenes |
+| `tools/precompute_retrieval.py` | Prepare the retrieval cache |
+| `tools/run_local.py` | Run generation, object matching, and evaluation |
+| `tools/evaluate.py` | Evaluate existing predictions |
+| `tools/preprocess.py` | Prepare query features and filtering decisions |
+| `tools/embed_reference.py` | Compute reference embeddings |
+| `tools/build_kb.py` | Build the knowledge base index |
 
-| Script | Purpose | Resources |
-|---|---|---|
-| `tools/prepare_config.py` | Resolve paths and validate the configuration | CPU |
-| `tools/audit_kb.py` | Check scene exclusion; add `--actual-keys` to inspect index keys | CPU |
-| `tools/precompute_retrieval.py` | Compute retrieval for all windows using the existing index and cached query features | CPU, FAISS, and sufficient memory |
-| `tools/run_local.py` | Run generation, object matching, and evaluation | GPU; intended for a single H200 |
-| `tools/evaluate.py` | Score existing graphs and object mappings without model inference | Python standard library / CPU |
-| `tools/preprocess.py` | Optionally recompute ColQwen decisions and SigLIP query features | GPU |
-| `tools/embed_reference.py` | Optionally compute reference embeddings with a 4 × 6 grid after scene exclusion | GPU |
-| `tools/build_kb.py` | Build a new index from reference features after scene exclusion | CPU |
-
-The main implementation files are `src/vision_legacy.py` for retrieval, `src/filter_legacy.py` for filtering, `src/graph_legacy.py` for windows and graph merging, `src/run.py` for generation, `src/evaluate_single_scan_local.py` for object association, and `evaluation/evaluate.py` for scoring.
-
-Inference runs locally. A DashScope API key is not required.
+Inference uses a local model and does not require a DashScope API key.
 
 ## Running the Pipeline
 
-Set the package, Python environment, and model paths for your installation. Replace the example paths below. `requirements-observed.txt` lists versions from the existing environment; it is not a complete installation lock file. Retrieval requires an environment with FAISS and PyTorch. The standalone evaluator uses the Python standard library.
+Set the package, Python environment, and model paths for your installation. Replace the example paths below. `requirements-observed.txt` lists versions from the existing environment; it is not a complete installation lock file. Use an environment with the dependencies required by the entry point, including FAISS and PyTorch for retrieval.
 
 ```bash
 SGR3_PACKAGE='/path/to/SGR3Model/sgr3'
@@ -67,7 +44,7 @@ Create a resolved configuration. The default project root is the parent of `sgr3
 
 The generation, preprocessing, embedding, index construction, and retrieval preparation commands print plans or perform preflight checks unless `--execute` is supplied. If preflight reports `needs_new_k10_retrieval_cache`, prepare the retrieval cache first.
 
-Compute retrieval on CPU, then run a single scan on GPU:
+Prepare the retrieval cache, then run a single scan:
 
 ```bash
 /path/to/faiss-environment/bin/python "$SGR3_PACKAGE/tools/precompute_retrieval.py" --config /path/to/work/paper_config.json --execute
